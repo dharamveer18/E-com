@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }}'s Profile</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            display: block;
+            justify-content: center;
+            align-items: center;
+            background-color: #F5F5DC;
+        }
+
+        div.col {
+            margin: 0%;
+            padding: 20px;
+            padding-left: 15%;
+        }
+
+        div.profile-container {
+            margin: 50px;
+            /* background-color: black; */
+            border: 5px wheat;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 50%;
+            margin-left: 190px;
+        }
+
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .profile-image {
+            align-items: center;
+            text-align: center;
+        }
+
+        .edit {
+            text-align: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="row">
+            <div class="col">
+                <div class="profile-container">
+                    <h1>
+                        <div class="profile-image">
+                            {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" height="100px" width="100px" alt="Profile Image">
+                            {% else %}
+                        </div>
+                        <p>No profile image uploaded.</p>
+                        {% endif %}
+                </div>
+                </h1>
+
+                <!-- Div for email -->
+                <div class="form-group">
+                    <p><strong>Email:</strong>{{ user.email }}</p>
+                </div>
+
+                <!-- Div for page number -->
+                <div class="form-group">
+                    <p><strong>Phone Number:</strong>{{ user.phone_number }}</p>
+                </div>
+
+                <!-- Div for state
+                <div class="form-group">
+                    <p><strong>State:</strong>{{ user.state }}</p>
+                </div>
+
+                Div for city -->
+                <!-- <div class="form-group">
+                    <p><strong>City:</strong>{{ user.city }}</p>
+                </div> -->
+
+                <!-- </div> 
+
+              
+
+            </div> -->
+            </div>
+    </main>
+</body>
+
+</html>
+{% endblock %}

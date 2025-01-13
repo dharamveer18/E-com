@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="image-container" style="display: flex; padding: 10px;">
+    <div style="display: flex; border: 2px solid black; padding: 5px; margin: 10px; background-color: white;">
+        <aside>
+            <h6>Categories:-</h6>
+            {% for category in category %}
+            <li>
+                <a style="text-decoration: none;" href="{% url 'category' pk=product.category.pk %}">{{ category }}</a>
+            </li>
+            {% endfor %}
+        </aside>
+    </div>
+
+    <img src="{{ product.image.url }}" alt="" height="600px">
+    <div>
+        <h2 style=" padding-left: 150px;"> {{product.productname}} </h2>
+        <hr>
+        <h5 style="padding: 5px;">Product Description:-</h5>
+        <p style="padding:10px;">{{product.description}}</p>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary"
+            style="background-color: rgb(234, 175, 48); color: black; margin-left: 2%;">Add to Cart</a>
+        <a href="{% url 'checkout'  %}" class="btn btn-primary" style="background-color: darkorange; color: black; margin-left: 0.5%;">Buy
+            Now</a>
+        {%else%}
+        <h3>Please Login to add item to your cart</h3>
+        {%endif%}
+    </div>
+</div>
+
+
+
+{% endblock %}
