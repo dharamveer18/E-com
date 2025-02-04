@@ -8,7 +8,8 @@ class User(AbstractUser):
    
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=10, blank=True)
+    phone_number = models.CharField(max_length=15, blank=True)
+    otp = models.CharField(max_length=6,null=True,blank=True)
     profile_image = models.ImageField(height_field=None, width_field=None, max_length=100)
 
     def __str__(self):
@@ -22,14 +23,8 @@ class Category(models.Model):
     
     
 class Product(models.Model):
-    Product_choices = (
-        ('shirt', 'shirt'),
-        ('jeans', 'jeans'),
-        ('sweatshirt','sweatshirt')
-    )
     productname = models.CharField(max_length=200)
-    product_type = models.CharField(max_length=255, choices=Product_choices, default='shirt',null=True,blank=True)
-    price = models.FloatField(null=True,blank=True)
+    price = models.IntegerField(null=True,blank=True)
     description = models.TextField()
     image = models.ImageField(height_field=None, width_field=None, max_length=100, null=None, blank=None, upload_to=None)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)

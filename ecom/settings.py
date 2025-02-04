@@ -134,3 +134,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 MEDIA_URL ='media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+# settings.py
+TWILIO_ACCOUNT_SID = 'ACaf264f707355335ea226fa2ea67a6f75'
+TWILIO_AUTH_TOKEN = 'b52270476a9a40c759a846c384b617b8'
+TWILIO_PHONE_NUMBER = '(618) 747-3834'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'dharamveer22062004@gmail.com'
+EMAIL_HOST_PASSWORD  = 'vtvs oass sfti edks'

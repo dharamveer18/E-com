@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F5F5DC;
+            display: block;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        div.login-container {
+            margin: 50px;
+            margin-left: 35%;
+        }
+
+        .login-container {
+            background-color: white;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        input[type="submit"] {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .forgot-password-container {
+    text-align: right;
+    margin-top: 10px; /* Optional: to add space between the link and the form */
+}
+    </style>
+</head>
+
+<body>
+    {% if messages %}
+        {{ message }}
+    {% endif %}
+    {% if form == 'forget_password' %}
+    <div class="login-container">
+        <h2>Re-Set Password</h2>
+        <form method="POST" action="{% url 'optgen' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="tel" id="email" name="email" placeholder="Enter Your Email" required>
+            </div>
+            <p><a href="{% url 'login_page' %}" style="text-decoration: none;">Remember your password?</a></p>
+
+            <input type="submit">
+        </form>
+    </div>
+    <div class="footer">
+    </div>
+    </div>
+
+    {% elif form == 'enter_otp' %}
+    <div class="login-container">
+        <h2>Enter OTP</h2>
+        <form method="POST" action="{% url 'verify' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="otp">Enter OTP</label>
+                <input type="tel" id="otp" name="otp" placeholder="Enter Your OTP" required>
+            </div>
+            <p><a href="{% url 'verify' %}" style="text-decoration: none;">Remember your password?</a></p>
+
+            <input type="submit">
+        </form>
+    </div>
+    <div class="footer">
+    </div>
+    </div>
+
+    {% elif form == 'otp_ver' %}
+    <div class="login-container">
+        <h2>Reset Password</h2>
+        <form method="POST" action="{% url 'login_page' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="new_password">Enter New Password</label>
+                <input type="password" id="new_password" name="new_password" placeholder="Enter Password" required>
+            </div>
+            <div class="form-group">
+                <label for="reset_password">Re-Enter New Password</label>
+                <input type="password" id="reset_password" name="reset_password" placeholder="Enter Password" required>
+            </div>
+            <input type="submit">
+        </form>
+    </div>
+    <div class="footer">
+    </div>
+    </div>
+    {% endif %}
+
+</body>
+
+</html>
+{% endblock %}

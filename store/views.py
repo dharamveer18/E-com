@@ -5,7 +5,15 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate,login,logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+import pyotp
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail  
+from django.conf import settings
+import requests
+import random
+from django.http import JsonResponse
 from .models import *
+from django.http import JsonResponse
 
 
 
@@ -16,18 +24,16 @@ User = get_user_model()
 def home(request):
     product = Product.objects.all()
     categorys = Category.objects.all()
-    mult_id = [1,5,6]
-    user = User.objects.filter(id__in=(mult_id))
-    user2 = User.objects.filter(id__range=(1,5))
-    user3 = User.objects.order_by('-id')[:3]
-    user4 = User.objects.get(username='dharamveer')
-    print("user>>>>>", user)
-    print("user2>>>>>", user2)
-    print("user3>>>>>", user3)
-    print("user4>>>>>", user4)
+    search = request.POST.get('search')
+    if search:
+        print(search,'search valueeeeeeeeeeeeeeeeeeeeee')
+        product = Product.objects.filter(productname__icontains=search)
+        print(product,'product foundddddddddddd')
+    else:
+        print("else",search)
     
     
-    context = {"products": product, 'categorys':categorys}
+    context = {"products": product, 'categorys':categorys, 'search':search}
     
 
     return render(request, 'home.html', context)
@@ -36,7 +42,9 @@ def home(request):
 def login_page(request):
     if request.method == "POST":
         username = request.POST.get('username')
+        print(username,'username')
         password = request.POST.get('password')
+        print(password,'password')
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
@@ -132,10 +140,6 @@ def category(request,pk):
     context = {'categorys': categorys, 'product': product}
     return render(request, 'category.html', context)
 
-# def test(request):
-#     user = User.objects.order_by(id__in=[1,4,3]).values()
-#     print("user>>>>>", user)
-#     return render(request,'home.html')
 
 def buy(request):
     if request.method=="POST":
@@ -150,5 +154,79 @@ def buy(request):
         order=Orders(name=name,email=email,number=number,address=address,country=country,city=city,zip_code=zip_code,)
         order.save()
    
-   
     return render(request,'buy.html')
+
+
+def generate_otp(request):
+    form = 'enter_otp'
+    # Generate and send OTP for the user
+    base32secret = pyotp.random_base32()
+    otp = pyotp.TOTP(base32secret, interval=60, digits=5)
+    otp_value = otp.now()
+
+    print(otp_value,'otpppppppppp')
+    # Assuming user object is fetched somehow
+    email = request.POST.get('email')
+    request.session['email'] = email  
+    print(request.session.items())  # To print the entire session
+
+    print(email,'>>>>>>>>>>')
+    user = User.objects.filter(email = email).first()
+    print(user,'')
+    if user:
+        user.otp = otp_value
+        user.otp_secret = base32secret
+        user.save()
+
+    send_mail(
+            'Email Verification OTP',
+            f'Your OTP for email verification is: {otp_value}',
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+
+    return render(request,'forget.html',{'form': form})
+
+@csrf_exempt
+def otp_verification(request):
+    otp = request.POST.get('otp') 
+    email = request.session.get('email')
+    print(email,'email recived from user ') 
+    print(otp, '>>>>>> OTP received')
+
+    user = User.objects.filter(otp=otp).first()
+    print(user, 'User retrieved after OTP check')
+    if email:
+        return render(request, 'reset.html')
+    else:
+        return JsonResponse({"message": "OTP is Invalid"})
+
+def pass_reset(request):
+    email = request.session.get('email')
+    print(email,'email get from session')
+    if email:
+        user  = User.objects.filter(email=email).first()
+        print(user,'userrrrrrrrrrrrrrr')
+        new_pass = request.POST.get('pass1')
+        print(new_pass)
+        confirm_pass = request.POST.get('pass2')
+        print(confirm_pass)
+
+        if new_pass and confirm_pass != new_pass and confirm_pass:
+            messages.error(request,'Both password has to same')
+            return redirect('reset/')
+        elif user.check_password(new_pass) == True :
+            messages.error(request,'New Password has to be diffrent from the previous password')
+            return redirect('reset/')
+        else:
+            user.set_password(new_pass)
+            user.save()
+            return redirect('login_page')
+
+    return render(request, 'reset.html')
+
+def forget(request):
+    form = 'forget_password'
+    return render(request,'forget.html',{'form':form})  
+

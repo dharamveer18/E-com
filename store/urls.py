@@ -19,5 +19,8 @@ urlpatterns = [
     path('remove/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('category/<int:pk>/',views.category,name="category"),
     path('buy/',views.buy,name='checkout'),
-    
+    path('forget/',views.forget,name='forget'),
+    path('send_opt/',views.generate_otp,name='optgen'),
+    path('otp_ver/', views.otp_verification,name='verify'),
+    path('reset_pass/',views.pass_reset,name='reset'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
