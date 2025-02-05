@@ -205,6 +205,7 @@ def otp_verification(request):
         return JsonResponse({"message": "OTP is Invalid"})
 
 def pass_reset(request):
+    error_message = None
     email = request.session.get('email')
     print(email,'email get from session')
     if email:
@@ -215,18 +216,20 @@ def pass_reset(request):
         confirm_pass = request.POST.get('pass2')
         print(confirm_pass)
 
-        if new_pass and confirm_pass != new_pass and confirm_pass:
-            messages.error(request,'Both password has to same')
-            return redirect('reset/')
-        elif user.check_password(new_pass) == True :
-            messages.error(request,'New Password has to be diffrent from the previous password')
-            return redirect('reset/')
-        else:
+        if user.check_password(new_pass):
+            error_message = 'New Password has to be diffrent from the previous password'
+        elif new_pass != confirm_pass:
+            print("??????????????????MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm")
+            error_message = 'Both password has to be same'
+        else: 
             user.set_password(new_pass)
             user.save()
-            return redirect('login_page')
 
-    return render(request, 'reset.html')
+            error_message = 'your password is changed now'
+            return redirect('login_page')
+        
+
+    return render(request, 'reset.html',{'error_message':error_message})
 
 def forget(request):
     form = 'forget_password'
