@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate,login,logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import pyotp
+import time
+from qrcode import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail  
 from django.conf import settings
@@ -13,8 +15,8 @@ import requests
 import random
 from django.http import JsonResponse
 from .models import *
-from django.http import JsonResponse
-
+import qrcode
+from io import BytesIO
 
 
 User = get_user_model()
@@ -230,3 +232,18 @@ def forget(request):
     form = 'forget_password'
     return render(request,'forget.html',{'form':form})  
 
+def qr_gen(request):
+    if request.method == 'POST':
+        data = request.POST['data']
+        img = make(data)
+        img_name = 'qr' + str(time.time()) + '.png'
+        img.save(settings.MEDIA_ROOT + '/' + img_name)
+        return render(request, 'qr.html', {'img_name': img_name})
+    return render(request, 'qr.html')
+
+# def generate_qr_code(request):
+#     url = request.build_absolute_uri('/product_list/')  # Change to your product page URL
+#     qr = qrcode.make(url)
+#     buffer = BytesIO()
+#     qr.save(buffer, format="PNG")
+#     return HttpResponse(buffer.getvalue(), content_type="image/png")

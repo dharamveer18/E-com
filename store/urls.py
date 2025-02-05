@@ -23,4 +23,5 @@ urlpatterns = [
     path('send_opt/',views.generate_otp,name='optgen'),
     path('otp_ver/', views.otp_verification,name='verify'),
     path('reset_pass/',views.pass_reset,name='reset'),
+    path('qr/',views.qr_gen,name='qr'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
