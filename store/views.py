@@ -69,8 +69,19 @@ def signup(request):
         phone_number = request.POST.get('phone_number')
         email = request.POST.get('email')
         username = request.POST.get('username')
+        print(username,'usernameeeeeeee')
         password = request.POST.get('password')
         profile_image = request.FILES.get('profile_image')
+        face_image_data = request.POST['face_image']
+        face_image_data = face_image_data.split(",")[1]
+        face_image = ContentFile(base64.b64decode(face_image_data),name=f'{username}_.jpg')
+        # user = User.objects.filter(username = username).exists()
+        # if user:
+        #     return JsonResponse({
+        #      'status':'false', 'message':'Username already taken'
+        #  })
+        # else:
+        #     user = User.objects.create(username = username)
 
         # Check if username already exists
         if User.objects.filter(username=username).exists():
@@ -90,6 +101,9 @@ def signup(request):
             profile_image=profile_image,
             phone_number=phone_number
         )
+
+        UserImages.objects.create(user=user,face_image=face_image )
+        # messages.info(request, "Account created successfully!")
 
         # Display success message and redirect to login page
         messages.info(request, "Account created successfully!")
@@ -256,26 +270,33 @@ def qr_gen(request):
 #     qr.save(buffer, format="PNG")
 #     return HttpResponse(buffer.getvalue(), content_type="image/png")
 
-@csrf_exempt
-def register(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        print(username,'usernameeeeeee')
-        face_image_data = request.POST['face_image']
-        face_image_data = face_image_data.split(",")[1]
-        face_image = ContentFile(base64.b64decode(face_image_data),name=f'{username}_.jpg')
-        try:
-            user= User.objects.create(username = username )
-        except Exception as e:
-            return JsonResponse({
-            'status':'false', 'message':'Username already taken'
-        })
-        UserImages.objects.create(user=user,face_image=face_image )
-        return JsonResponse({
-            'status':'status', 'message':'User registered Successfully'
-        })
+# @csrf_exempt
+# def register(request):
+#     if request.method == "POST":
+#         username = request.POST.get("username")
+#         print(username,'usernameeeeeee')
+#         face_image_data = request.POST['face_image']
+#         face_image_data = face_image_data.split(",")[1]
+#         face_image = ContentFile(base64.b64decode(face_image_data),name=f'{username}_.jpg')
+#         user = User.objects.filter(username = username).exists()
+#         if user:
+#             return JsonResponse({
+#              'status':'false', 'message':'Username already taken'
+#          })
+#         else:
+#             user = User.objects.create(username = username)
+#         # try:
+#         #     user= User.objects.create(username = username )
+#         # except Exception as e:
+#         #     return JsonResponse({
+#         #     'status':'false', 'message':'Username already taken'
+#         # })
+#         UserImages.objects.create(user=user,face_image=face_image )
+#         return JsonResponse({
+#             'status':'status', 'message':'User registered Successfully'
+#         })
     
-    return render(request,'face.html')
+#     return render(request,'face.html')
 
 @csrf_exempt
 def login_user(request):

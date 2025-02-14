@@ -9,85 +9,80 @@
     <title>Login Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #F5F5DC;
-            display: block;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+ /* Ensure the body background does not affect other pages */
+body.login-page {
+    font-family: Arial, sans-serif;
+    background-color: #F5F5DC;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
 
-        div.login-container {
-            margin: 50px;
-            margin-left: 35%;
-        }
+/* Center the login container */
+.login-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin-left: 39%;
+    margin-top: 5%;
+}
 
-        .login-container {
-            background-color: white;
-            margin: 20px;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
+/* Ensure h2 stays centered */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+/* Form styles */
+.form-group {
+    margin-bottom: 15px;
+}
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+label {
+    display: block;
+    margin-bottom: 5px;
+}
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
+/* Improve input field appearance */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
 
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
+/* Update button styles */
+input[type="submit"] {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s;
+}
 
-        input[type="submit"] {
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            width: 100%;
-        }
+input[type="submit"]:hover {
+    background-color: #4cae4c;
+}
 
-        input[type="submit"]:hover {
-            background-color: #4cae4c;
-        }
+/* Fix footer behavior */
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    background-color: var(--footer-color);
+    color: white;
+}
 
-        .footer {
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        /* .forgot-password-container {
-            text-align: right;
-            margin-top: 10px;
-            /* Optional: to add space between the link and the form 
-        } */
-
-        body {
-            background-color: #F5F5DC
-        }
-
-        a,
-        a:hover {
-            color: #333
-        }
     </style>
 
 

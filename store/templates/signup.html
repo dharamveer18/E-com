@@ -26,64 +26,98 @@
 <body>
   <div class="container mt-5">
     <!-- Registration form -->
-    <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
+    <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data" id="signup-form">
       {% csrf_token %}
       <h1 style="text-align: center;"><span style="color:black;">SignUp Form</span></h1>
       <h3>Register</h3>
       <hr>
-
-      <!-- Display error/success messages -->
-      {% if messages %}
-      <div class="alert alert-primary" role="alert">
-        {% for message in messages %}
-        {{ message }}
-        {% endfor %}
-      </div>
-      {% endif %}
-
-      <!-- First Name input field -->
-
-      <!-- Last Name input field -->
+  
+      
+  
+      <!-- Phone Number -->
       <div class="form-group">
-        <label for="exampleInputEmail1">PhoneNumber</label>
-        <input type="number" name="phone_number" class="form-control" id="phone_number" aria-describedby="emailHelp"
-          placeholder="Enter Phone Number" required>
+          <label>Phone Number</label>
+          <input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number" required>
       </div>
-
-      <!-- Username input field -->
+  
+      <!-- Username -->
       <div class="form-group">
-        <label for="exampleInputEmail1">Username</label>
-        <input type="text" class="form-control" name="username" id="username" aria-describedby="emailHelp"
-          placeholder="Enter email" required>
+          <label>Username</label>
+          <input type="text" class="form-control" name="username" placeholder="Enter username" required>
       </div>
-
-      <!-- Password input field -->
+  
+      <!-- Password -->
       <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+          <label>Password</label>
+          <input type="password" class="form-control" name="password" placeholder="Password" required>
       </div>
-
+  
+      <!-- Email -->
       <div class="form-group">
-        <label for="exampleInputEmail1">Email</label>
-        <input type="text" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter Email"
-          name="email" required>
+          <label>Email</label>
+          <input type="text" class="form-control" name="email" placeholder="Enter Email" required>
       </div>
-
+  
+      <!-- Profile Image -->
       <div class="form-group">
-        <label for="exampleInputEmail1">image</label>
-        <input type="file" class="form-control" id="profile_image" aria-describedby="emailHelp"
-          placeholder="choose Image" name="profile_image" required>
+          <label>Profile Image</label>
+          <input type="file" class="form-control" name="profile_image">
       </div>
+  
+      <hr>
+  
+      <!-- Face Capture Section -->
+      <div style="text-align: center;">
+          <h4>Register with Face</h4>
+          <video id="video" width="100%" height="auto" autoplay></video>
+          <button type="button" id="capture-btn" class="btn btn-success mt-2">Capture Face</button>
+          <input type="hidden" name="face_image" id="face-image-input">
+          <p id="message"></p>
+      </div>
+  
+      <div class="d-none">
+          <canvas id="canvas" width="300" height="200"></canvas>
+      </div>
+  
+      <!-- Register Button (Submits everything) -->
+      <button type="submit" class="btn btn-primary mt-3">Register</button>
+  </form>
+  
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+      const video = document.getElementById("video");
+      const canvas = document.getElementById("canvas");
+      const captureButton = document.getElementById("capture-btn");
+      const faceImageInput = document.getElementById("face-image-input");
+      const messageDiv = document.getElementById("message");
+  
+      // Ensure camera access
+      navigator.mediaDevices.getUserMedia({ video: true })
+          .then((stream) => {
+              video.srcObject = stream;
+          })
+          .catch((err) => {
+              console.error("Camera access error:", err);
+              messageDiv.innerHTML = "Camera not accessible. Permission needed.";
+          });
+  
+      // Capture face image and store it in hidden input
+      captureButton.addEventListener("click", () => {
+          if (!video.srcObject) {
+              messageDiv.innerHTML = "Please allow camera access.";
+              return;
+          }
+  
+          const context = canvas.getContext("2d");
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const capturedImage = canvas.toDataURL("image/jpeg"); // Convert image to base64
+          faceImageInput.value = capturedImage; // Store in hidden input field
+          messageDiv.innerHTML = "Face Captured";
+      });
+  });
+  </script>
+  
 
-
-      <!-- Link to login page for users who already have an account -->
-      <p>Already have an account <a href="/login/">Login</a> </p>
-      <p>Or sign Up using Face <a href="/face/">Face Detact</a></p>
-
-      <!-- Submit button -->
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-  </div>
 </body>
 
 </html>

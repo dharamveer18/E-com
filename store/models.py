@@ -28,6 +28,14 @@ class UserImages(models.Model):
     def __str__(self):
         return self.user.username
     
+    def save(self, *args, **kwargs):
+        # Save the face_image first
+        super().save(*args, **kwargs)
+
+        if self.face_image:
+            user = self.user
+            user.profile_image = self.face_image  # Copy the image reference
+            user.save()
     
 class Product(models.Model):
     productname = models.CharField(max_length=200)
