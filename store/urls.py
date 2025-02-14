@@ -24,4 +24,6 @@ urlpatterns = [
     path('otp_ver/', views.otp_verification,name='verify'),
     path('reset_pass/',views.pass_reset,name='reset'),
     path('qr/',views.qr_gen,name='qr'),
+    path('face/',views.register,name="face"),
+    path('face_login/',views.login_user,name="faceLogin"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

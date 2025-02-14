@@ -115,6 +115,7 @@
                         Password?</a></p>
             </div>
             <p><a id="dst" href="{% url 'signup' %}" style="text-decoration: none;">Don't have account?</a></p>
+            <p>Or Login using Face ID <a href="{% url 'faceLogin' %}">FaceID</a></p>
 
             <input type="submit" value="Login">
             {% csrf_token %}

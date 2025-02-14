@@ -17,6 +17,10 @@ from django.http import JsonResponse
 from .models import *
 import qrcode
 from io import BytesIO
+from django.core.files.base import ContentFile
+import face_recognition
+import base64
+
 
 
 User = get_user_model()
@@ -101,7 +105,8 @@ def logout_view(request):
 @login_required
 def profile(request):
     user = request.user
-    context = {'user': user}
+    user_image = UserImages.objects.filter(user=user).last()  # Get latest captured image
+    context = {'user': user, "userimage": user_image}
     return render(request, 'profile.html', context)
 
 def product_details(request, pk):
@@ -142,7 +147,7 @@ def category(request,pk):
     context = {'categorys': categorys, 'product': product}
     return render(request, 'category.html', context)
 
-
+# This is for testing purpose only
 def buy(request):
     if request.method=="POST":
         name=request.POST.get('name', '')
@@ -250,3 +255,84 @@ def qr_gen(request):
 #     buffer = BytesIO()
 #     qr.save(buffer, format="PNG")
 #     return HttpResponse(buffer.getvalue(), content_type="image/png")
+
+@csrf_exempt
+def register(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        print(username,'usernameeeeeee')
+        face_image_data = request.POST['face_image']
+        face_image_data = face_image_data.split(",")[1]
+        face_image = ContentFile(base64.b64decode(face_image_data),name=f'{username}_.jpg')
+        try:
+            user= User.objects.create(username = username )
+        except Exception as e:
+            return JsonResponse({
+            'status':'false', 'message':'Username already taken'
+        })
+        UserImages.objects.create(user=user,face_image=face_image )
+        return JsonResponse({
+            'status':'status', 'message':'User registered Successfully'
+        })
+    
+    return render(request,'face.html')
+
+@csrf_exempt
+def login_user(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        face_image_data = request.POST.get('face_image')
+
+        if not username or not face_image_data:
+            return JsonResponse({'status': 'error', 'message': 'Missing username or face image'})
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'User does not exist'})
+
+        # Decode uploaded face image
+        try:
+            face_image_data = face_image_data.split(",")[1]
+            uploaded_image = ContentFile(base64.b64decode(face_image_data), name=f'{username}.jpg')
+            uploaded_face_image = face_recognition.load_image_file(uploaded_image)
+            uploaded_face_encodings = face_recognition.face_encodings(uploaded_face_image)
+
+            if not uploaded_face_encodings:
+                return JsonResponse({'status': 'error', 'message': 'No face detected in uploaded image.'})
+
+            uploaded_face_encoding = uploaded_face_encodings[0]  # Extract the first face encoding
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': f'Error processing uploaded image: {str(e)}'})
+
+        # Retrieve stored face image
+        user_image = UserImages.objects.filter(user=user).last()
+        if not user_image:
+            return JsonResponse({'status': 'error', 'message': 'No stored face image found for this user.'})
+
+        try:
+            stored_face_image = face_recognition.load_image_file(user_image.face_image.path)
+            stored_face_encodings = face_recognition.face_encodings(stored_face_image)
+
+            if not stored_face_encodings:
+                return JsonResponse({'status': 'error', 'message': 'No face detected in stored image.'})
+
+            stored_face_encoding = stored_face_encodings[0]  # Extract the first encoding
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': f'Error processing stored image: {str(e)}'})
+
+        # Use face distance instead of compare_faces
+        face_distance = face_recognition.face_distance([stored_face_encoding], uploaded_face_encoding)[0]
+        threshold = 0.5  # Adjust threshold for better accuracy (lower = stricter)
+
+        if face_distance < threshold:
+            # **Authenticate the user and create a session**
+            login(request, user)
+            return JsonResponse({'status': 'success', 'message': 'Logged in successfully.'})
+
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Face does not match, login failed.'})
+
+    return render(request, 'faceLogin.html')

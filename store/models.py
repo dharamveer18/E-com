@@ -10,7 +10,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15, blank=True)
     otp = models.CharField(max_length=6,null=True,blank=True)
-    profile_image = models.ImageField(height_field=None, width_field=None, max_length=100)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
 
     def __str__(self):
         return self.username
@@ -20,6 +20,13 @@ class Category(models.Model):
     
     def __str__(self):
         return self.name
+    
+class UserImages(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    face_image = models.ImageField(upload_to='images/')
+
+    def __str__(self):
+        return self.user.username
     
     
 class Product(models.Model):

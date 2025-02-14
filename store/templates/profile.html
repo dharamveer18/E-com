@@ -64,23 +64,31 @@
                     <h1>
                         <div class="profile-image">
                             {% if user.profile_image %}
-                            <img src="{{ user.profile_image.url }}" height="100px" width="100px" alt="Profile Image">
+                                <img src="{{ user.profile_image.url }}" height="100px" width="100px" alt="Profile Image">
+                            {% elif userimages and userimages.face_image %}
+                                <img src="{{ userimages.face_image.url }}" height="100px" width="100px" alt="Captured Face Image">
                             {% else %}
+                                <p>No profile image uploaded.</p>
+                            {% endif %}
                         </div>
-                        <p>No profile image uploaded.</p>
-                        {% endif %}
+                    </h1>
                 </div>
                 </h1>
 
-                <!-- Div for email -->
+                <div class="form-group">
+                    <p><strong>Username:</strong>{{ user.username }}</p>
+                </div>
+
+                <!-- Div for email
                 <div class="form-group">
                     <p><strong>Email:</strong>{{ user.email }}</p>
                 </div>
 
-                <!-- Div for page number -->
+
+                Div for page number
                 <div class="form-group">
                     <p><strong>Phone Number:</strong>{{ user.phone_number }}</p>
-                </div>
+                </div> -->
 
                 <!-- Div for state
                 <div class="form-group">
