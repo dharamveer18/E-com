@@ -2,81 +2,107 @@
 {% load static %}
 {% block content %}
 
-<!-- templates/index.html -->
+<style>
+    /* QR Code Page Container */
+    .qr-container {
+        min-height: calc(100vh - 300px); /* Account for header and footer */
+        padding: 40px 20px;
+        background: var(--background-color);
+    }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR code generator</title>
+    /* QR Generator Card */
+    .qr-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 30px;
+    }
 
-    <style>
-        *{
-            box-sizing: border-box;
-            font-family: sans-serif;
-        }
-        main{
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+    .qr-card h1 {
+        color: var(--text-color);
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 25px;
+        text-align: center;
+    }
 
-        input{
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+    /* QR Form Elements */
+    .qr-form input[type="text"] {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: 'Poppins', sans-serif;
+        transition: border-color 0.3s ease;
+    }
 
-        button{
-            width: 100%;
-            max-width: 200px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #eee;
-            
-        }
+    .qr-form input[type="text"]:focus {
+        border-color: var(--secondary-color);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(255, 170, 165, 0.2);
+    }
 
-        button:hover{
-            background-color: #ddd;
-        }
+    .qr-form button {
+        display: block;
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto 20px;
+        padding: 12px 20px;
+        background-color: var(--secondary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
-        .qr-img{
-            width: 100%;
-            max-width: 300px;
-            margin: 0 auto;
-        }
+    .qr-form button:hover {
+        background-color: #FF8C8C;
+    }
 
-        .qr-img img{
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
-    <main>
-        <h1>
-            QR code generator
-        </h1>
-        <form method="post">
+    /* QR Image Container */
+    .qr-image-container {
+        width: 100%;
+        max-width: 300px;
+        margin: 30px auto 0;
+        text-align: center;
+    }
+
+    .qr-image-container img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<div class="qr-container">
+    <div class="qr-card">
+        <h1>QR Code Generator</h1>
+        <form method="post" class="qr-form">
             {% csrf_token %}
-            <input type="text" name="data" id="data" placeholder="write something or enter url">
-            <button>Generate</button>
+            <input 
+                type="text" 
+                name="data" 
+                id="data" 
+                placeholder="Write something or enter a URL"
+                required
+            >
+            <button type="submit">Generate QR Code</button>
         </form>
 
-        <div class="qr-img">
-            {% if img_name %}
-                <img src="/media/{{ img_name }}" alt="qr code">
-            {% endif %}
+        {% if img_name %}
+        <div class="qr-image-container">
+            <img src="/media/{{ img_name }}" alt="Generated QR Code">
         </div>
-    </main>
-</body>
-</html>
-
-
+        {% endif %}
+    </div>
+</div>
 
 {% endblock %}

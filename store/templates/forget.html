@@ -1,147 +1,115 @@
 {% extends 'base.html' %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #F5F5DC;
-            display: block;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+<style>
+    /* Scope all styles to the reset-password-container to avoid conflicts */
+    .reset-password-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 300px); /* Account for header and footer */
+        background: linear-gradient(to right, #FFAAA5, #8ED1A5);
+    }
+
+    .reset-password-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        animation: fadeInUp 0.5s ease-in-out;
+    }
+
+    body{
+        background: linear-gradient(to right, #FFAAA5, #8ED1A5);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
         }
-
-        div.login-container {
-            margin: 50px;
-            margin-left: 35%;
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
+    }
 
-        .login-container {
-            background-color: white;
-            margin: 20px;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
+    .reset-password-card h2 {
+        margin: 0 0 1.5rem 0;
+        color: var(--text-color);
+        font-weight: 600;
+        text-align: center;
+    }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    .reset-password-form .form-group {
+        margin-bottom: 1.5rem;
+    }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+    .reset-password-form label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+        font-weight: 500;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
+    .reset-password-form input[type="email"] {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        transition: border-color 0.3s ease;
+    }
 
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
+    .reset-password-form input[type="email"]:focus {
+        border-color: var(--secondary-color);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(255, 170, 165, 0.2);
+    }
 
-        input[type="submit"] {
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            width: 100%;
-        }
+    .reset-password-form .submit-btn {
+        width: 100%;
+        padding: 0.75rem;
+        background: var(--secondary-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
 
-        input[type="submit"]:hover {
-            background-color: #4cae4c;
-        }
+    .reset-password-form .submit-btn:hover {
+        background-color: #FF8C8C;
+    }
 
-        .footer {
-            text-align: center;
-            margin-top: 10px;
-        }
-        .forgot-password-container {
-    text-align: right;
-    margin-top: 10px; /* Optional: to add space between the link and the form */
-}
-    </style>
-</head>
+    .reset-password-form .remember-link {
+        display: block;
+        margin-top: 1rem;
+        color: var(--secondary-color);
+        text-decoration: none;
+        text-align: center;
+        transition: color 0.3s ease;
+    }
 
-<body>
-    {% if messages %}
-        {{ message }}
-    {% endif %}
-    {% if form == 'forget_password' %}
-    <div class="login-container">
-        <h2>Re-Set Password</h2>
-        <form method="POST" action="{% url 'optgen' %}">
+    .reset-password-form .remember-link:hover {
+        color: #FF8C8C;
+    }
+</style>
+
+<div class="reset-password-container">
+    <div class="reset-password-card">
+        <h2>Reset Password</h2>
+        <form method="POST" action="{% url 'optgen' %}" class="reset-password-form">
             {% csrf_token %}
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="tel" id="email" name="email" placeholder="Enter Your Email" required>
+                <input type="email" id="email" name="email" placeholder="Enter Your Email" required>
             </div>
-            <p><a href="{% url 'login_page' %}" style="text-decoration: none;">Remember your password?</a></p>
-
-            <input type="submit">
+            <button type="submit" class="submit-btn">Submit</button>
+            <a href="{% url 'login_page' %}" class="remember-link">Remember your password?</a>
         </form>
     </div>
-    <div class="footer">
-    </div>
-    </div>
+</div>
 
-    {% elif form == 'enter_otp' %}
-    <div class="login-container">
-        <h2>Enter OTP</h2>
-        <form method="POST" action="{% url 'verify' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="otp">Enter OTP</label>
-                <input type="tel" id="otp" name="otp" placeholder="Enter Your OTP" required>
-            </div>
-            <p><a href="{% url 'verify' %}" style="text-decoration: none;">Remember your password?</a></p>
-
-            <input type="submit">
-        </form>
-    </div>
-    <div class="footer">
-    </div>
-    </div>
-
-    {% elif form == 'otp_ver' %}
-    <div class="login-container">
-        <h2>Reset Password</h2>
-        <form method="POST" action="{% url 'login_page' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="new_password">Enter New Password</label>
-                <input type="password" id="new_password" name="new_password" placeholder="Enter Password" required>
-            </div>
-            <div class="form-group">
-                <label for="reset_password">Re-Enter New Password</label>
-                <input type="password" id="reset_password" name="reset_password" placeholder="Enter Password" required>
-            </div>
-            <input type="submit">
-        </form>
-    </div>
-    <div class="footer">
-    </div>
-    </div>
-    {% endif %}
-
-</body>
-
-</html>
 {% endblock %}

@@ -2,112 +2,75 @@
 {% load static %}
 {% block content %}
 
-<!DOCTYPE html>
-<html lang="en">
+<style>
+    /* Ensure full-page flexbox centering */
+    .profile-wrapper {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #F5F5DC;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <title>{{ user.username }}'s Profile</title>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            display: block;
-            justify-content: center;
-            align-items: center;
-            background-color: #F5F5DC;
-        }
+    /* Wrapper to center content */
+    .profile-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-        div.col {
-            margin: 0%;
-            padding: 20px;
-            padding-left: 15%;
-        }
+    /* Profile container */
+    .profile-content {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 350px;
+        text-align: center;
+    }
 
-        div.profile-container {
-            margin: 50px;
-            /* background-color: black; */
-            border: 5px wheat;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 50%;
-            margin-left: 190px;
-        }
+    /* Profile image */
+    .profile-image img {
+        border-radius: 50%;
+        border: 3px solid #ccc;
+        object-fit: cover;
+    }
+</style>
 
+<div class="profile-wrapper">
+    <div class="profile-container">
+        <div class="profile-content">
+            <h1>{{ user.username }}'s Profile</h1>
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .profile-image {
-            align-items: center;
-            text-align: center;
-        }
-
-        .edit {
-            text-align: center;
-            align-items: center;
-        }
-    </style>
-</head>
-
-<body>
-    <main>
-        <div class="row">
-            <div class="col">
-                <div class="profile-container">
-                    <h1>
-                        <div class="profile-image">
-                            {% if user.profile_image %}
-                                <img src="{{ user.profile_image.url }}" height="100px" width="100px" alt="Profile Image">
-                            {% elif userimages and userimages.face_image %}
-                                <img src="{{ userimages.face_image.url }}" height="100px" width="100px" alt="Captured Face Image">
-                            {% else %}
-                                <p>No profile image uploaded.</p>
-                            {% endif %}
-                        </div>
-                    </h1>
-                </div>
-                </h1>
-
-                <div class="form-group">
-                    <p><strong>Username:</strong>{{ user.username }}</p>
-                </div>
-
-                <!-- Div for email
-                <div class="form-group">
-                    <p><strong>Email:</strong>{{ user.email }}</p>
-                </div>
-
-
-                Div for page number
-                <div class="form-group">
-                    <p><strong>Phone Number:</strong>{{ user.phone_number }}</p>
-                </div> -->
-
-                <!-- Div for state
-                <div class="form-group">
-                    <p><strong>State:</strong>{{ user.state }}</p>
-                </div>
-
-                Div for city -->
-                <!-- <div class="form-group">
-                    <p><strong>City:</strong>{{ user.city }}</p>
-                </div> -->
-
-                <!-- </div> 
-
-              
-
-            </div> -->
+            <div class="profile-image">
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" height="100px" width="100px" alt="Profile Image">
+                {% elif userimages and userimages.face_image %}
+                <img src="{{ userimages.face_image.url }}" height="100px" width="100px" alt="Captured Face Image">
+                {% else %}
+                <p>No profile image uploaded.</p>
+                {% endif %}
             </div>
-    </main>
-</body>
 
-</html>
+            <!-- Uncomment these if needed -->
+            
+            <div class="form-group">
+                <p><strong>Username:</strong> {{ user.username }}</p>
+            </div>
+
+            <div class="form-group">
+                <p><strong>Email:</strong> {{ user.email }}</p>
+            </div>
+
+            <div class="form-group">
+                <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
 {% endblock %}

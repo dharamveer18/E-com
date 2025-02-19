@@ -34,7 +34,8 @@ class UserImages(models.Model):
 
         if self.face_image:
             user = self.user
-            user.profile_image = self.face_image  # Copy the image reference
+            user.profile_image = self.face_image 
+            print(user.profile_image,'ppppppp')
             user.save()
     
 class Product(models.Model):
